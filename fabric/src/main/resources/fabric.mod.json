@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "hotbaaaar",
+  "version": "${version}",
+  "name": "HotBaaaar",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "GPL-3.0",
+  "icon": "assets/hotbaaaar/icon.png",
+  "environment": "*",
+  "entrypoints": {},
+  "mixins": [
+    "hotbaaaar.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
