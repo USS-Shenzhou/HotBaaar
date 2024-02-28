@@ -9,7 +9,14 @@
   "license": "GPL-3.0",
   "icon": "assets/hotbaaaar/icon.png",
   "environment": "*",
-  "entrypoints": {},
+  "entrypoints": {
+    "client": [
+      "cn.ussshenzhou.hotbaaaar.client.HotBaaaarClient"
+    ],
+    "main": [
+      "cn.ussshenzhou.hotbaaaar.HotBaaaar"
+    ]
+  },
   "mixins": [
     "hotbaaaar.mixins.json"
   ],

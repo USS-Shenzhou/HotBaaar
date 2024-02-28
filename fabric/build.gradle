@@ -10,8 +10,6 @@ base {
     archivesName = rootProject.mod_id
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
 repositories {
     // Add repositories to retrieve artifacts from in here.
     // You should only use this when depending on other mods because
@@ -27,11 +25,11 @@ repositories {
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-    //mappings loom.officialMojangMappings()
-    mappings loom.layered() {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${rootProject.parchment_minecraftVersion}:${rootProject.parchment_mappingsVersion}@zip")
-    }
+    mappings loom.officialMojangMappings()
+    //mappings loom.layered() {
+    //    officialMojangMappings()
+    //    parchment("org.parchmentmc.data:parchment-${rootProject.parchment_minecraftVersion}:${rootProject.parchment_mappingsVersion}@zip")
+    //}
     modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
@@ -75,8 +73,8 @@ java {
 }
 
 jar {
-    from("../LICENSE") {
-        rename { "${it}_${rootProject.archivesBaseName}" }
+    from("LICENSE") {
+        rename { "${it}_${rootProject.archivesBaseName}"}
     }
 }
 
