@@ -15,17 +15,12 @@ forgix {
 
     custom {
         projectName = "neoforge"
-        jarLocation = "build/libs/" + "-" + mod_version + "+forge+" + minecraft_version + ".jar"
+        jarLocation = "build/libs/" + "hotbaaaar-" + mod_version + ".jar"
     }
 
     fabric {
         projectName = "fabric"
-        jarLocation = "build/libs/" + "-" + mod_version + "+fabric+" + minecraft_version + ".jar"
+        jarLocation = "build/libs/" + "hotbaaaar-" + mod_version + ".jar"
     }
 }
-
-//subprojects {
-//    build.finalizedBy(mergeJars)
-//    assemble.finalizedBy(mergeJars)
-//}
 
