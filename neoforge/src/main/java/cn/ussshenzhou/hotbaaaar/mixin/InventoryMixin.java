@@ -1,6 +1,7 @@
 package cn.ussshenzhou.hotbaaaar.mixin;
 
 import cn.ussshenzhou.hotbaaaar.Util;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
 import net.minecraft.util.Mth;
@@ -9,13 +10,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.api.distmarker.OnlyIns;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * @author USS_Shenzhou
@@ -71,10 +69,8 @@ public class InventoryMixin {
     @Unique
     @OnlyIn(Dist.CLIENT)
     private int hotBaaaarGetScrollStep() {
-        if (Minecraft.getInstance().options.keyShift.isDown()) {
+        if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_ALT)) {
             return hotBaaaarGetHotbarAmount();
-        } else if (Minecraft.getInstance().options.keySprint.isDown()) {
-            return 9;
         }
         return 1;
     }

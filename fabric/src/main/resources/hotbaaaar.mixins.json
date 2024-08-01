@@ -6,10 +6,11 @@
   "mixins": [
     "InventoryMixin"
   ],
-  "client": [
-    "GuiMixin"
-  ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "GuiMixin",
+    "MinecraftMixin"
+  ]
 }

@@ -1,6 +1,6 @@
 plugins {
     id 'maven-publish'
-    id "io.github.pacifistmc.forgix" version "1.2.6"
+    id "io.github.pacifistmc.forgix" version "1.2.+"
 }
 
 repositories {
@@ -9,8 +9,8 @@ repositories {
 
 forgix {
     group = mod_group_id
-    //mergedJarName = mod_name + "-" + mod_version + "+" minecraft_version + ".jar"
-    mergedJarName = "HorBaaaar-0.1.0+1.20.4.jar"
+    //mergedJarName = mod_name + "-" + mod_version + ".jar"
+    mergedJarName = "HorBaaaar-0.2.0.jar"
     outputDir = "build/libs/"
 
     custom {
@@ -22,5 +22,10 @@ forgix {
         projectName = "fabric"
         jarLocation = "build/libs/" + "hotbaaaar-" + mod_version + ".jar"
     }
+}
+
+tasks.named('mergeJars') {
+    dependsOn ':fabric:build'
+    dependsOn ':neoforge:build'
 }
 
