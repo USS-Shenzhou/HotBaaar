@@ -13,7 +13,7 @@ forgix {
     mergedJarName = "HorBaaaar-0.2.0.jar"
     outputDir = "build/libs/"
 
-    custom {
+    neoforge {
         projectName = "neoforge"
         jarLocation = "build/libs/" + "hotbaaaar-" + mod_version + ".jar"
     }
