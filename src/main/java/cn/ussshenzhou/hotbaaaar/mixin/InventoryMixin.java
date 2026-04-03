@@ -1,6 +1,7 @@
 package cn.ussshenzhou.hotbaaaar.mixin;
 
-import cn.ussshenzhou.hotbaaaar.Util;
+import cn.ussshenzhou.hotbaaaar.util.HotBaaaarHelper;
+import cn.ussshenzhou.hotbaaaar.util.Util;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
@@ -8,8 +9,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -42,44 +41,6 @@ public class InventoryMixin {
      * @reason Inject at HEAD would do the same, but overwrite is cheaper and more convenient.
      */
     @Overwrite
-    public void swapPaint(double pDirection) {
-        int i = (int) Math.signum(pDirection);
-
-        int max = 9;
-        if (this.player.level().isClientSide) {
-            max = hotBaaaarGetHotbarAmount() * 9;
-            i = i * hotBaaaarGetScrollStep();
-        }
-        this.selected -= i;
-        while (this.selected < 0) {
-            this.selected += max;
-        }
-
-        while (this.selected >= max) {
-            this.selected -= max;
-        }
-    }
-
-    @Unique
-    @OnlyIn(Dist.CLIENT)
-    private int hotBaaaarGetHotbarAmount() {
-        return Mth.clamp(Minecraft.getInstance().getWindow().getGuiScaledWidth() / Util.HOTBAR_UNIT_LENGTH, 1, 4);
-    }
-
-    @Unique
-    @OnlyIn(Dist.CLIENT)
-    private int hotBaaaarGetScrollStep() {
-        if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_ALT)) {
-            return hotBaaaarGetHotbarAmount();
-        }
-        return 1;
-    }
-
-    /**
-     * @author USS_Shenzhou
-     * @reason Inject at HEAD would do the same, but overwrite is cheaper and more convenient.
-     */
-    @Overwrite
     public static int getSelectionSize() {
         return 36;
     }
@@ -90,12 +51,7 @@ public class InventoryMixin {
      */
     @Overwrite
     public int getSuitableHotbarSlot() {
-        int max = 9;
-        if (this.player.level().isClientSide) {
-            if (this.player.level().isClientSide) {
-                max = hotBaaaarGetHotbarAmount() * 9;
-            }
-        }
+        int max = HotBaaaarHelper.getHotBaaaarAmount(this.player.getUUID()) * 9;
         for (int i = 0; i < max; ++i) {
             int j = (this.selected + i) % max;
             if (this.items.get(j).isEmpty()) {
