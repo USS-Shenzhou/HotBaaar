@@ -49,7 +49,7 @@ public class InventoryMixin {
      */
     @Overwrite
     public static int getSelectionSize() {
-        if (WALKER.walk(s -> s.anyMatch(f -> f.getClassName().startsWith("mekanism")))) {
+        if (WALKER.walk(s -> s.anyMatch(f -> f.getClassName().startsWith("mekanism") || f.getClassName().startsWith("appeng.menu")))) {
             return 9;
         }
         if (FMLEnvironment.getDist() == Dist.CLIENT) {
