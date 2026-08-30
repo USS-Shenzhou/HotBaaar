@@ -2,36 +2,34 @@ package cn.ussshenzhou.hotbaaaar.network;
 
 import cn.ussshenzhou.hotbaaaar.HotBaaaar;
 import cn.ussshenzhou.hotbaaaar.util.HotBaaaarServerManager;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 
 /**
  * @author USS_Shenzhou
  */
-public class DisplayResolutionPacket implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<DisplayResolutionPacket> TYPE = new Type<>(Identifier.fromNamespaceAndPath(HotBaaaar.MOD_ID, "display_resolution"));
-    public static final StreamCodec<ByteBuf, DisplayResolutionPacket> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT,
-            o -> o.width,
-            DisplayResolutionPacket::new
-    );
+public class DisplayResolutionPacket {
 
-    public int width;
+    public static final ResourceLocation TYPE = new ResourceLocation(HotBaaaar.MOD_ID, "display_resolution");
+
+    public final int width;
 
     public DisplayResolutionPacket(int width) {
         this.width = width;
     }
 
-    public void handle(IPayloadContext context) {
-        HotBaaaarServerManager.HOTBAR_AMOUNT.put(context.player().getUUID(), this.width);
+    public static DisplayResolutionPacket read(FriendlyByteBuf buf) {
+        return new DisplayResolutionPacket(buf.readVarInt());
     }
 
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+    public void handle(ServerPlayer player) {
+        HotBaaaarServerManager.HOTBAR_AMOUNT.put(player.getUUID(), this.width);
+    }
+
+    public static void send(int width) {
+        ClientPlayNetworking.send(TYPE, PacketByteBufs.create().writeVarInt(width));
     }
 }

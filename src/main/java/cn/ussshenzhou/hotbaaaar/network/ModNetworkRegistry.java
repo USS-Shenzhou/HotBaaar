@@ -1,20 +1,17 @@
 package cn.ussshenzhou.hotbaaaar.network;
 
 import cn.ussshenzhou.hotbaaaar.HotBaaaar;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 /**
  * @author USS_Shenzhou
  */
-@EventBusSubscriber
 public class ModNetworkRegistry {
 
-    @SubscribeEvent
-    public static void networkPacketRegistry(RegisterPayloadHandlersEvent event) {
-        var registrar = event.registrar(HotBaaaar.MOD_ID);
-
-        registrar.playToServer(DisplayResolutionPacket.TYPE, DisplayResolutionPacket.STREAM_CODEC, DisplayResolutionPacket::handle);
+    public static void register() {
+        ServerPlayNetworking.registerGlobalReceiver(DisplayResolutionPacket.TYPE, (server, player, handler, buf, responseSender) -> {
+            DisplayResolutionPacket packet = DisplayResolutionPacket.read(buf);
+            server.execute(() -> packet.handle(player));
+        });
     }
 }
