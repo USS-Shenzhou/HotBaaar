@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "hotbaaaar",
+  "version": "${version}",
+  "name": "HotBaaaar",
+  "description": "${mod_description}",
+  "authors": [
+    "USS_Shenzhou"
+  ],
+  "contact": {},
+  "license": "GNU GPL 3.0",
+  "icon": "hotbaaaar.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "cn.ussshenzhou.hotbaaaar.HotBaaaar"
+    ],
+    "client": [
+      "cn.ussshenzhou.hotbaaaar.HotBaaaarClient"
+    ]
+  },
+  "mixins": [
+    "hotbaaaar.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "minecraft": "~1.20.2",
+    "java": ">=17",
+    "fabric-api": "*"
+  }
+}
