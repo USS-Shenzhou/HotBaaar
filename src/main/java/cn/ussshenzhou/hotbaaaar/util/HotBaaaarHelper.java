@@ -2,9 +2,10 @@ package cn.ussshenzhou.hotbaaaar.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
-import net.neoforged.fml.loading.FMLEnvironment;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.security.InvalidParameterException;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -22,12 +23,12 @@ public class HotBaaaarHelper {
             if (window == null) {
                 return 36;
             }
-            return Mth.clamp(window.getGuiScaledWidth() / Util.HOTBAR_UNIT_LENGTH,1, 4);
+            return Mth.clamp(window.getGuiScaledWidth() / Util.HOTBAR_UNIT_LENGTH, 1, 4);
         }
     };
 
     public static int getHotBaaaarAmount(@Nullable UUID uuid) {
-        if (FMLEnvironment.getDist().isClient()) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             return CLIENT.get();
         } else {
             if (uuid == null) {
