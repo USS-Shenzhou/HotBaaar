@@ -1,19 +1,14 @@
 package cn.ussshenzhou.hotbaaaar.mixin;
 
-import cn.ussshenzhou.hotbaaaar.util.HotBaaaarHelper;
-import cn.ussshenzhou.hotbaaaar.util.Util;
-import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.client.Minecraft;
+import cn.ussshenzhou.hotbaaaar.HotbaaaarConfig;
+import cn.ussshenzhou.hotbaaaar.util.HotbarHelper;
+import cn.ussshenzhou.t88.config.ConfigHelper;
 import net.minecraft.core.NonNullList;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.fml.loading.FMLConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
@@ -53,8 +48,9 @@ public class InventoryMixin {
             return 9;
         }
         if (FMLEnvironment.getDist() == Dist.CLIENT) {
-            return 9 * HotBaaaarHelper.getHotBaaaarAmount(null);
+            return ConfigHelper.getConfigRead(HotbaaaarConfig.class).actualHotbarAmount * 9;
         } else {
+            //should be fine
             return 36;
         }
     }
@@ -65,7 +61,7 @@ public class InventoryMixin {
      */
     @Overwrite
     public int getSuitableHotbarSlot() {
-        int max = HotBaaaarHelper.getHotBaaaarAmount(this.player.getUUID()) * 9;
+        int max = HotbarHelper.getHotbaaaarAmount(this.player.getUUID()) * 9;
         for (int i = 0; i < max; ++i) {
             int j = (this.selected + i) % max;
             if (this.items.get(j).isEmpty()) {

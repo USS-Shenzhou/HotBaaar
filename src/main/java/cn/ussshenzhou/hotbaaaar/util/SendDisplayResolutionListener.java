@@ -1,6 +1,9 @@
 package cn.ussshenzhou.hotbaaaar.util;
 
-import cn.ussshenzhou.hotbaaaar.network.DisplayResolutionPacket;
+import cn.ussshenzhou.hotbaaaar.HotbaaaarConfig;
+import cn.ussshenzhou.hotbaaaar.network.SetPreferredHotbarAmountPacket;
+import cn.ussshenzhou.t88.config.ConfigHelper;
+import cn.ussshenzhou.t88.network.NetworkHelper;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -16,6 +19,6 @@ public class SendDisplayResolutionListener {
 
     @SubscribeEvent
     public static void onLogin(ClientPlayerNetworkEvent.LoggingIn event) {
-        ClientPacketDistributor.sendToServer(new DisplayResolutionPacket(Minecraft.getInstance().getWindow().getGuiScaledWidth()));
+        NetworkHelper.sendToServer(new SetPreferredHotbarAmountPacket());
     }
 }

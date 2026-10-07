@@ -8,8 +8,7 @@
     "InventoryMixin"
   ],
   "client": [
-    "GuiMixin",
-    "MinecraftMixin"
+    "HudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,10 +1,14 @@
 package cn.ussshenzhou.hotbaaaar.mixin;
 
+import cn.ussshenzhou.hotbaaaar.HotbaaaarConfig;
+import cn.ussshenzhou.hotbaaaar.network.SetPreferredHotbarAmountPacket;
+import cn.ussshenzhou.t88.config.ConfigHelper;
+import cn.ussshenzhou.t88.network.NetworkHelper;
 import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
@@ -15,14 +19,17 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static cn.ussshenzhou.hotbaaaar.util.Util.*;
 
 /**
  * @author USS_Shenzhou
  */
-@Mixin(Gui.class)
-public abstract class GuiMixin {
+@Mixin(Hud.class)
+public abstract class HudMixin {
 
     @Shadow
     @Final
@@ -35,12 +42,8 @@ public abstract class GuiMixin {
     @Shadow
     protected abstract void extractSlot(GuiGraphicsExtractor graphics, int x, int y, DeltaTracker deltaTracker, Player player, ItemStack itemStack, int seed);
 
-    /**
-     * @author USS_Shenzhou
-     * @reason Inject at HEAD would do the same, but overwrite is cheaper and more convenient.
-     */
-    @Overwrite
-    private void extractItemHotbar(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
+    @Inject(method = "extractItemHotbar", at = @At("HEAD"), order = 9999, cancellable = true)
+    private void hotbaaaarOverwriteExtractItemHotbar(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         Player player = this.getCameraPlayer();
         if (player != null) {
             ItemStack offhand = player.getOffhandItem();
@@ -49,7 +52,13 @@ public abstract class GuiMixin {
             final int oneHotbarLength = 182;
             final int halfHotbar = 91;
             final int hotbarHeight = 22;
-            int hotbarAmount = Mth.clamp(graphics.guiWidth() / oneHotbarLength, 1, 4);
+            int maxHotbarAmount = Mth.clamp(graphics.guiWidth() / oneHotbarLength, 1, 4);
+            var cfg = ConfigHelper.getConfigRead(HotbaaaarConfig.class);
+            int hotbarAmount = Mth.clamp(cfg.preferredHotbarAmount, 1, maxHotbarAmount);
+            if (cfg.actualHotbarAmount != hotbarAmount) {
+                ConfigHelper.getConfigWrite(HotbaaaarConfig.class, c -> c.actualHotbarAmount = hotbarAmount);
+                NetworkHelper.sendToServer(new SetPreferredHotbarAmountPacket());
+            }
             int x0 = screenCenter - hotbarAmount * halfHotbar;
             int x1 = x0 + hotbarAmount * oneHotbarLength;
             //render background-----
@@ -101,7 +110,7 @@ public abstract class GuiMixin {
                         x = x0 - 22;
                     }
 
-                    int progress = (int)(attackStrengthScale * 19.0F);
+                    int progress = (int) (attackStrengthScale * 19.0F);
                     graphics.blitSprite(RenderPipelines.GUI_TEXTURED, HOTBAR_ATTACK_INDICATOR_BACKGROUND_SPRITE, x, y, 18, 18);
                     graphics.blitSprite(
                             RenderPipelines.GUI_TEXTURED, HOTBAR_ATTACK_INDICATOR_PROGRESS_SPRITE, 18, 18, 0, 18 - progress, x, y + 18 - progress, 18, progress
@@ -109,5 +118,6 @@ public abstract class GuiMixin {
                 }
             }
         }
+        ci.cancel();
     }
 }
